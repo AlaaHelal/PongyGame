@@ -1,2 +1,2 @@
 # PongyGame
-Challenge Mission07 in UJP Parhway
+Challenge Mission07 in Unity Junior Programmer Patheway
