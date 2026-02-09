@@ -20,9 +20,12 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI highScoreText;
 
     public string playerName;
-    public int highScore;
+
+    public string savedName;
+    public int highScore = 0;
     void Awake()
     {
+        
         if (instance != null)
         {
             Destroy(gameObject);
@@ -37,8 +40,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         playerNameField = GameObject.Find("NameInput").GetComponent<TMP_InputField>();
-
-        highScoreText.text = $"Best Score: {playerName} : {highScore}";
+        
+        highScoreText.text = $"Best Score: {savedName} : {highScore}";
 
          
     }
@@ -69,22 +72,23 @@ public class GameManager : MonoBehaviour
     public void SaveNameAndScore()
     {
         SaveData data = new SaveData();
-        data.Name = playerName;
+        data.Name = savedName;
         data.score = highScore;
 
         string json = JsonUtility.ToJson(data);
-        File.WriteAllText(Application.persistentDataPath + "/savwdata.json", json);
+        File.WriteAllText(Application.persistentDataPath + "/savedata.json", json);
+        
     }
 
     public void LoadNameAndScore()
     {
-        string path = Application.persistentDataPath + "/savwdata.json";
+        string path = Application.persistentDataPath + "/savedata.json";
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
             SaveData data = JsonUtility.FromJson<SaveData>(json);
 
-            playerName = data.Name;
+            savedName = data.Name;
             highScore = data.score;
         }
     }

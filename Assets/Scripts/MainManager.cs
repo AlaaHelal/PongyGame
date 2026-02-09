@@ -18,10 +18,12 @@ public class MainManager : MonoBehaviour
     
     private bool m_Started = false;
     private int m_Points;
-    private int bestScore;
+   
 
     private bool m_GameOver = false;
     private string PlayerName;
+    private string bestPlayerName;
+    private int highScore;
 
 
 
@@ -30,7 +32,11 @@ public class MainManager : MonoBehaviour
     void Start()
     {
         PlayerName = GameManager.instance.playerName;
-        bestScoreText.text = $"Best Score : {PlayerName} : ";
+        bestPlayerName = GameManager.instance.savedName;
+        highScore = GameManager.instance.highScore;
+        ShowHighScore();
+
+
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -67,7 +73,7 @@ public class MainManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-                GameManager.instance.LoadNameAndScore();
+                ShowHighScore();
             }
         }
     }
@@ -80,12 +86,19 @@ public class MainManager : MonoBehaviour
 
     public void GameOver()
     {
-       
-        bestScore = m_Points;
-        bestScoreText.text = $"Best Score : {PlayerName}: {bestScore}";
         m_GameOver = true;
         GameOverText.SetActive(true);
-        GameManager.instance.highScore = bestScore;
-        GameManager.instance.SaveNameAndScore();
+        if (m_Points > highScore)
+        {
+            GameManager.instance.highScore = m_Points;
+            GameManager.instance.savedName = PlayerName;
+            GameManager.instance.SaveNameAndScore();
+        }
+    }
+
+    public void ShowHighScore()
+    {
+        GameManager.instance.LoadNameAndScore(); 
+        bestScoreText.text = $"Best Score : {bestPlayerName} : {highScore}";
     }
 }
